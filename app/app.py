@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, jsonify
 from flask_migrate import Migrate
-from flask_restful import Api, Resource,jsonify
+from flask_restful import Api, Resource
 
 from models import db, Restaurant, Pizza, RestaurantPizza
 
