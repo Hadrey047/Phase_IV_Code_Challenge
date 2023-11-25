@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
-# from sqlalchemy.orm import relationship
+from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
 
 metadata = MetaData(naming_convention={
@@ -17,7 +17,9 @@ class Restaurant(db.Model, SerializerMixin):
     name = db.Column(db.String(50), unique=True)
     address = db.Column(db.String(100))
     
-    pizzas = db.relationship('Pizza', secondary='restaurant_pizzas')
+    pizzas = db.relationship('Pizza', secondary='restaurant_pizzas', back_populates='restaurants')
+ 
+
     
 
     def __repr__(self):
@@ -26,7 +28,7 @@ class Restaurant(db.Model, SerializerMixin):
 class Pizza(db.Model, SerializerMixin):
     __tablename__ = 'pizzas'
 
-    serialize_rules = ('-restaurants')
+    # serialize_rules = ('-restaurants')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
@@ -35,7 +37,9 @@ class Pizza(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
-    restaurants = db.relationship('Restaurant', secondary='restaurant_pizzas')
+    restaurants = db.relationship('Restaurant', secondary='restaurant_pizzas', back_populates='pizzas')
+    
+
     
 
      
@@ -53,13 +57,18 @@ class RestaurantPizza(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
-    restaurants_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
-    pizza_id = db.Column(db.Integer, db.ForeignKey('pizzas.id'))
+    restaurants_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
+    pizza_id = db.Column(db.Integer, db.ForeignKey('pizzas.id'), nullable=False)
     
-    # restuarant = db.relationship('Restaurant', back_populates='pizzas')
-    # pizza = db.relationship('Pizza', back_populates='restaurants')
+   
    
     def __repr__(self):
        return f'RestaurantPizza {self.price}'
+   
+   
+    # @validates('price')
+    # def validate_price(self, key, price):
+    #     if not (1 <= price <= 30):
+    #         raise ValueError("Price must be between 1 and 30.")
+    #     return price
     
-# add any models you may need. 
