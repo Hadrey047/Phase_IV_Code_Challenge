@@ -38,8 +38,9 @@ def restaurants():
 
         return response
     
-@app.route('/restaurants/<int:id>', methods=['GET'])
+@app.route('/restaurants/<int:id>', methods=['GET' 'POST'])
 def restaurants_by_id(id):
+
     data = request.get_json()
     
     if request.method == 'GET':
@@ -64,7 +65,9 @@ def restaurants_by_id(id):
 
     db.session.commit()
 
-    return make_response(jsonify({'message': 'Restaurant updated'}), 200)
+    # return make_response(jsonify({'message': 'Restaurant updated'}), 200)
+
+
 
 
 @app.route('/pizzas', methods=['GET'])

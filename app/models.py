@@ -20,8 +20,6 @@ class Restaurant(db.Model, SerializerMixin):
     pizzas = db.relationship('Pizza', secondary='restaurant_pizzas', back_populates='restaurants')
  
 
-    
-
     def __repr__(self):
         return f'<Restaurant {self.name} and {self.address}>'
 
